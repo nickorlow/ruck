@@ -2,21 +2,22 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import time
 from spotipy.oauth2 import SpotifyOAuth
+from dotenv import dotenv_values
+
+
+config = dotenv_values(".env")  
 
 
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
-  client_id="{TODO_ADD_ENV}",
-  client_secret="{TODO_ADD_ENV}",
+  client_id=config['CLIENT_ID'],
+  client_secret=config['CLIENT_SECRET'],
   redirect_uri="https://localhost/spotify",
   scope="playlist-read-collaborative,playlist-modify-public,playlist-modify-private"))
 
 
-playlist_id = "{REPLACE_ME}"
-banned_user = "{REPLACE_ME}"
+playlist_id = config['PLAYLIST_ID']
 
-whitelisted_users = [
-  "{REPLACE_ME}",
-]
+allowlisted_users = config['ALLOW_LIST'].split(',')
 
 while 1==1:
   while 1==1:
@@ -32,7 +33,7 @@ while 1==1:
     for i,x in enumerate(tracks):
       track = tracks[i]
       user_id = track['added_by']['id']
-      if user_id not in whitelisted_users:
+      if user_id not in allowlisted_users:
         print("Removing Track: "+track['track']['name']+"\nBy:"+ user_id)
         removal_ids.append({"uri":track['track']['uri'][14:], "positions":[i]})
 
